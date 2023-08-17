@@ -38,13 +38,45 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
   const [lastName, setLastName] = useState("Byte");
   const [phone, setPhone] = useState("8885559999");
 
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newEntry = { firstName, lastName, phone };
-    addEntryToPhoneBook(newEntry);
-    setFirstName("");
-    setLastName("");
-    setPhone("");
+    if (validateForm()) {
+      const newEntry = { firstName, lastName, phone };
+      addEntryToPhoneBook(newEntry);
+      setFirstName("");
+      setLastName("");
+      setPhone("");
+    }
+  };
+
+  const validateForm = () => {
+    let valid = true;
+
+    if (firstName.trim() === "") {
+      setFirstNameError("First name is required");
+      valid = false;
+    } else {
+      setFirstNameError("");
+    }
+
+    if (lastName.trim() === "") {
+      setLastNameError("Last name is required");
+      valid = false;
+    } else {
+      setLastNameError("");
+    }
+
+    if (phone.trim() === "") {
+      setPhoneError("Phone is required");
+      valid = false;
+    } else {
+      setPhoneError("");
+    }
+
+    return valid;
   };
 
   return (
@@ -57,9 +89,13 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
         name="userFirstName"
         type="text"
         value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
+        onChange={(e) => {
+          setFirstName(e.target.value);
+          firstName.length >= 0 && setFirstNameError("");
+        }}
       />
-      <br />
+      <p style={{ color: "red", fontSize: "12px" }}>{firstNameError}</p>
+
       <label>Last name:</label>
       <br />
       <input
@@ -68,20 +104,28 @@ function PhoneBookForm({ addEntryToPhoneBook }) {
         name="userLastName"
         type="text"
         value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
+        onChange={(e) => {
+          setLastName(e.target.value);
+          firstName.length >= 0 && setLastNameError("");
+        }}
       />
-      <br />
+      <p style={{ color: "red", fontSize: "12px" }}>{lastNameError}</p>
+
       <label>Phone:</label>
       <br />
       <input
         style={style.form.inputs}
         className="userPhone"
         name="userPhone"
-        type="text"
+        type="number"
         value={phone}
-        onChange={(e) => setPhone(e.target.value)}
+        onChange={(e) => {
+          setPhone(e.target.value);
+          firstName.length >= 0 && setPhoneError("");
+        }}
       />
-      <br />
+      <p style={{ color: "red", fontSize: "12px" }}>{phoneError}</p>
+
       <input
         style={style.form.submitButton}
         className="submitButton"
